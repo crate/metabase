@@ -70,7 +70,7 @@
           :date-interval  crate-util/date-interval
           :details-fields (constantly [{:name         "hosts"
                                         :display-name "Hosts"
-                                        :default      "//localhost:4300"}])
+                                        :default      "//localhost:5432/"}])
           :features       (comp (u/rpartial set/difference #{:foreign-keys}) sql/features)})
   sql/ISQLDriver
   (merge (sql/ISQLDriverDefaultsMixin)
