@@ -347,7 +347,7 @@
 
 (def ^:private ^:const can-connect-timeout-ms
   "Consider `can-connect?`/`can-connect-with-details?` to have failed after this many milliseconds."
-  5000)
+  20000)
 
 (defn can-connect-with-details?
   "Check whether we can connect to a database with ENGINE and DETAILS-MAP and perform a basic query

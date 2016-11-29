@@ -203,7 +203,7 @@
   ([table field]
    (hx/qualify-and-escape-dots (:schema table) (:name table) (:name field))))
 
-(defn- query
+(defn query
   "Execute a HONEYSQL-FROM query against DATABASE, DRIVER, and optionally TABLE."
   ([driver database honeysql-form]
    (jdbc/query (db->jdbc-connection-spec database)
