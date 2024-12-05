@@ -60,17 +60,18 @@
 (defmethod driver/display-name :postgres [_] "PostgreSQL")
 
 ;; Features that are supported by Postgres and all of its child drivers like Redshift
-(doseq [[feature supported?] {:connection-impersonation true
-                              :describe-fields          true
-                              :describe-fks             true
-                              :convert-timezone         true
-                              :datetime-diff            true
+(doseq [[feature supported?] {:connection-impersonation false
+                              :describe-fields          false
+                              :describe-fks             false
+                              :convert-timezone         false
+                              :datetime-diff            false
                               :now                      true
                               :persist-models           true
                               :schemas                  true
-                              :identifiers-with-spaces  true
-                              :uuid-type                true
-                              :uploads                  true}]
+                              :identifiers-with-spaces  false
+                              :uuid-type                false
+                              :table-privileges         false
+                              :uploads                  false}]
   (defmethod driver/database-supports? [:postgres feature] [_driver _feature _db] supported?))
 
 (defmethod driver/database-supports? [:postgres :nested-field-columns]
@@ -80,7 +81,6 @@
 ;; Features that are supported by postgres only
 (doseq [feature [:actions
                  :actions/custom
-                 :table-privileges
                  :index-info]]
   (defmethod driver/database-supports? [:postgres feature]
     [driver _feat _db]
@@ -231,11 +231,11 @@
                            :else nil]
                           :type]
                          [:d.description :description]
-                         [:stat.n_live_tup :estimated_row_count]]
+                         ]
              :from      [[:pg_catalog.pg_class :c]]
              :join      [[:pg_catalog.pg_namespace :n]   [:= :c.relnamespace :n.oid]]
              :left-join [[:pg_catalog.pg_description :d] [:and [:= :c.oid :d.objoid] [:= :d.objsubid 0] [:= :d.classoid [:raw "'pg_class'::regclass"]]]
-                         [:pg_stat_user_tables :stat]    [:and [:= :n.nspname :stat.schemaname] [:= :c.relname :stat.relname]]]
+                         ]
              :where     [:and [:= :c.relnamespace :n.oid]
                          ;; filter out system tables
                          [(keyword "!~") :n.nspname "^pg_"] [:<> :n.nspname "information_schema"]
